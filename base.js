@@ -175,7 +175,7 @@ Promise.resolve(getStatsProvider(wallet))
         };
     }).then(() => {
         //output slack message into .json file for php to exec
-        return fs.writeFile('/home/calvin/projects/nicehash-slack-notifier/slackmessage.json', JSON.stringify(slackMessage), function(err) {
+        return fs.writeFile('<path>/nicehash-slack-notifier/slackmessage.json', JSON.stringify(slackMessage), function(err) {
             if (err) {
                 return console.log(err);
             }

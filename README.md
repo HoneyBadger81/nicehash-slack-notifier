@@ -20,17 +20,18 @@ donation: 1GNDUySAr5qhGXPKyJAFsUmYdrVoCkrgQQ
 
 ### Usage
 
-1. git clone project
+1. git clone https://github.com/genma81/nicehash-slack-notifier.git
 
-2. cd <project>
+2. cd nicehash-slack-notifier
 
 3. npm install
 
 4. edit nicehash-slack-notifier/base.js
-  - change wallet to your own wallet address(btc only)
+    - change wallet to your own wallet address(btc only) //line 7
+    - change file path //line 178
 
 5. edit nicehash-slack-notifier/fireslackmessage.php
-  - change slack webhook api to your own
+    - change slack webhook api to your own
 
 6. test run
 
@@ -41,8 +42,7 @@ donation: 1GNDUySAr5qhGXPKyJAFsUmYdrVoCkrgQQ
    php fireslackmessage.php
    ```
 
-
-6. open cronjobs, set job for your wanted time
+7. open cronjobs, set job for your wanted time
 
    ```
    crontab -e
