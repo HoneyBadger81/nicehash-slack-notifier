@@ -135,6 +135,9 @@ Promise.resolve(getStatsProvider(wallet))
                 if (exchangeRate[4] === '<') {
                     //if rate is not in float
                     return exchangeRate = exchangeRate.substr(0, 4);
+                } else if (exchangeRate[6] === '') {
+                    //if rate has only 1 decimal
+                    return exchangeRate = exchangeRate.substr(0, 6);
                 } else {
                     //if rate is float
                     return exchangeRate = Number(exchangeRate);
