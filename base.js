@@ -179,10 +179,4 @@ Promise.resolve(getStatsProvider(wallet))
         }).then(() => {
             console.log('done!');
         });
-        // return fs.writeFile('/home/calvin/projects/nicehash-slack-notifier/slackmessage.json', JSON.stringify(slackMessage), function(err) {
-        //     if (err) {
-        //         return console.log(err);
-        //     }
-        //     console.log('The file was saved!');
-        // });
     });
