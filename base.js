@@ -1,7 +1,6 @@
 //donations : 1GNDUySAr5qhGXPKyJAFsUmYdrVoCkrgQQ
 
 const fetch = require('node-fetch');
-const fs = require('fs');
 
 //change your wallet here
 const wallet = '1GNDUySAr5qhGXPKyJAFsUmYdrVoCkrgQQ';
@@ -47,12 +46,13 @@ let statsProvider = {
         btc: '',
         usd: '',
         myr: ''
+    }, exchangeRate = {
+        usd: 0,
+        myr: 0
     };
 
 let workingAlgo = [],
     numOfWorkers = [],
-    startStr = '',
-    exchangeRate = 0,
     slackMessage = {};
 
 function sum(total, num) {
@@ -127,27 +127,19 @@ Promise.resolve(getStatsProvider(wallet))
     })
     .then(() => {
         //get current exchange rate from BTC to USD directly from nicehash website since there is no website
-        return fetch('https://new.nicehash.com/miner/' + wallet)
-            .then(res => res.text())
+        return fetch('http://api.coindesk.com/v1/bpi/currentprice/MYR.json')
+            .then(res => res.json())
             .then(res => {
-                startStr = res.search('Exchange rate of 1 BTC = <span class="fiatAmountExchange">');
-                exchangeRate = res[startStr + 58].concat(res[startStr + 59], res[startStr + 60], res[startStr + 61], res[startStr + 62], res[startStr + 63], res[startStr + 64]);
-                if (exchangeRate[4] === '<') {
-                    //if rate is not in float
-                    return exchangeRate = exchangeRate.substr(0, 4);
-                } else if (exchangeRate[6] === ' ') {
-                    //if rate has only 1 decimal
-                    return exchangeRate = exchangeRate.substr(0, 6);
-                } else {
-                    //if rate is float
-                    return exchangeRate = Number(exchangeRate);
-                }
+                // get balance to USD
+                exchangeRate.usd = Number(res.bpi.USD.rate.split(',').join('')).toFixed(2);
+                //get balance in MYR
+                exchangeRate.myr = Number(res.bpi.MYR.rate.split(',').join('')).toFixed(2);
             });
     }).then(() => {
         //get balance in USD
-        balance.usd = 'USD' + (balance.btc * exchangeRate).toFixed(2);
+        balance.usd = 'USD' + (balance.btc * exchangeRate.usd).toFixed(2);
         //get balance in MYR
-        balance.myr = 'MYR' + ((balance.btc * exchangeRate) * 4.3).toFixed(2);
+        balance.myr = 'MYR' + (balance.btc * exchangeRate.myr).toFixed(2);
 
         var processes = statsProvider.accepted.map(item => {
             return getStatsProviderWorkers(wallet, item.algo);
@@ -173,15 +165,24 @@ Promise.resolve(getStatsProvider(wallet))
         return slackMessage = {
             'username': 'nicehash bot',
             'icon_emoji': ':smiley:',
-            'text': 'workers: ' + sumOfWorkers + ', Balance: ' + balance.usd + '/' + balance.myr,
+            'text': 'workers: ' + sumOfWorkers + ', Rate: ' + 'USD' + exchangeRate.usd + '/MYR' + exchangeRate.myr + ', Balance: ' + balance.usd + '/' + balance.myr,
             'attachments': attachments
         };
     }).then(() => {
         //output slack message into .json file for php to exec
-        return fs.writeFile('<path>/nicehash-slack-notifier/slackmessage.json', JSON.stringify(slackMessage), function(err) {
-            if (err) {
-                return console.log(err);
-            }
-            console.log('The file was saved!');
+        fetch('https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXX', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(slackMessage)
+        }).then(() => {
+            console.log('done!');
         });
+        // return fs.writeFile('/home/calvin/projects/nicehash-slack-notifier/slackmessage.json', JSON.stringify(slackMessage), function(err) {
+        //     if (err) {
+        //         return console.log(err);
+        //     }
+        //     console.log('The file was saved!');
+        // });
     });

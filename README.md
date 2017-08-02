@@ -11,8 +11,6 @@ donation: 1GNDUySAr5qhGXPKyJAFsUmYdrVoCkrgQQ
 ```
 - nodejs
     > https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
-- php
-    > sudo apt install php7.0
 - slack messenger
     > https://slack.com/
     > require incoming webhooks: https://my.slack.com/services/new/incoming-webhook/
@@ -28,18 +26,14 @@ donation: 1GNDUySAr5qhGXPKyJAFsUmYdrVoCkrgQQ
 
 4. edit nicehash-slack-notifier/base.js
     - change wallet to your own wallet address(btc only) //line 7
-    - change file path //line 178
-
-5. edit nicehash-slack-notifier/fireslackmessage.php
-    - change slack webhook api to your own
+    - change slack webhook api to your own //line 173
 
 6. test run
 
    ```
    node base.js
-   //success if output is "The file is saved"
+   //success if output is "done!" & receive slack message
 
-   php fireslackmessage.php
    ```
 
 7. open cronjobs, set job for your wanted time
@@ -48,6 +42,5 @@ donation: 1GNDUySAr5qhGXPKyJAFsUmYdrVoCkrgQQ
    crontab -e
 
    //cron file
-   59 * * * * cd <path>/nicehash-slack-notifier && node base.js
-   0 * * * * cd <path>/nicehash-slack-notifier && php fireslackmessage.php
+   0 * * * * cd <path>/nicehash-slack-notifier && node base.js
    ```
