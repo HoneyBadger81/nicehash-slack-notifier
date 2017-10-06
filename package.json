@@ -4,17 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint:js": "standard",
+    "prod": "node nicehash.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "eslint": "^4.2.0",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-node": "^5.1.0",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "node-fetch": "^1.7.1"
+    "node-fetch": "^1.7.1",
+    "standard": "^10.0.3"
   }
 }
